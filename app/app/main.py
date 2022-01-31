@@ -25,8 +25,24 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get(URL_PREFIX + "/hello-world", tags=["boilerplate"])
-async def zone_names_with_list_of_taz_ids():
+
+@app.get(URL_PREFIX + "/trailheads", tags=["geojson"])
+async def trailheads():
+    """Get all trailhead points as geojson"""
+    query = """
+        select gid, geom as geometry from trailheads
     """
+    return await postgis_query_to_geojson(query, ["gid", "geometry"], DATABASE_URL)
+
+
+@app.get(URL_PREFIX + "/trail-segments", tags=["geojson"])
+async def trail_segments():
+    """Get all trail segment lines as geojson"""
+    query = """
+        select
+            delcogis_5 as trail_name,
+            status_f_1 as status,
+            geom as geometry
+        from trail_segments
     """
-    return {"hello": "world"}
+    return await postgis_query_to_geojson(query, ["trail_name", "status", "geometry"], DATABASE_URL)
