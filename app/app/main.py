@@ -25,7 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get(URL_PREFIX, tags=["boilerplate"])
+@app.get(URL_PREFIX + "/hello-world", tags=["boilerplate"])
 async def zone_names_with_list_of_taz_ids():
     """
     """
