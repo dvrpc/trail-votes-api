@@ -1,7 +1,6 @@
 import json
 import asyncpg
 import shapely
-import pandas
 import geopandas
 
 
@@ -47,18 +46,3 @@ async def postgis_query_to_geojson(query: str, columns: list, uri: str):
     gdf = geopandas.GeoDataFrame.from_records(result, columns=columns)
 
     return json.loads(gdf.to_json())
-
-
-async def sql_query_raw(query: str, uri: str):
-    """
-    Connect to postgres via `asyncpg` and return raw result of query
-    """
-    conn = await asyncpg.connect(uri)
-
-    try:
-        result = await conn.fetch(query)
-
-    finally:
-        await conn.close()
-
-    return result
