@@ -37,6 +37,26 @@ app.add_middleware(
 )
 
 
+@app.on_event("startup")
+async def startup_event():
+    """
+    Upon starting the app, confirm that the postgres
+    database has a table named 'user_votes'
+    """
+
+    sql_create_user_vote_table = """
+        create table if not exists user_votes (
+            email_address text,
+            submitted_on timestamp,
+            trailheads integer[]
+        );
+    """
+
+    conn = await asyncpg.connect(DATABASE_URL)
+    await conn.execute(sql_create_user_vote_table)
+    await conn.close()
+
+
 @app.get(URL_PREFIX + "/trailheads", tags=["geojson"])
 async def get_all_trailheads_as_geojson():
     """Get all trailhead points as geojson"""
