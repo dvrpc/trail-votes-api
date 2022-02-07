@@ -25,8 +25,7 @@ load_dotenv(find_dotenv())
 DATABASE_URL = os.getenv("DATABASE_URL", None)
 URL_PREFIX = os.getenv("URL_PREFIX", "")
 
-app = FastAPI(docs_url=URL_PREFIX)
-
+app = FastAPI(docs_url=f"{URL_PREFIX}/docs", openapi_url=f"{URL_PREFIX}/openapi.json")
 
 app.add_middleware(
     CORSMiddleware,
